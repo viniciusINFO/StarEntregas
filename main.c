@@ -18,7 +18,7 @@ void grafo_insere(plan * aInserir, int iNdice, int iTempo, int bEmGuerra);
 void grafo_libera(plan * grafo);
 void grafo_insere_duplo(plan ** grafo, int prim, int sec, int iTempo, int bEmGuerra);
 void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior);
-int dijkstra_proximo(plan ** grafo, int origem, int destino);
+int dijkstra_pesototal(plan ** grafo, int origem, int destino);
 int dijkstra_percorrer(plan ** grafo, int origem, int destino);
 
 int main(){
