@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<time.h>
+
 // pra mudar pro grafo exemplar eh mudar esse define pra 4, descomentar os grafo_insere_duplo la embaixo e comentar os grafo_insere_duplo embaixo do grafo do computerphile,
 // fazer o contrario pra fazer o contrario
 
@@ -22,7 +22,7 @@ int dijkstra_proximo(plan ** grafo, int origem, int destino);
 int dijkstra_percorrer(plan ** grafo, int origem, int destino);
 
 int main(){
-    srand(time(NULL));
+    
     plan ** grafo = malloc(sizeof**grafo * QPLANETAS); // Inicia o vetor da lista de adjacência
     int i,j; // Auxiliares pro for
     for (i = 0; i < QPLANETAS; i += 1){ // Inicia cada um dos planetas
@@ -253,6 +253,8 @@ int dijkstra_proximo(plan ** grafo, int origem, int destino){
     while (gfAnterior[x] != origem){
         x = gfAnterior[x];
     }
+    free(iCusto);
+    free(gfAnterior);
     return x;
 
 }
