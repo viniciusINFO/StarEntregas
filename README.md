@@ -1,2 +1,2 @@
 # StarEntregas
-Tentativa de implementaçao do problema do carteiro chines só quem em star wars só que tem planetas em guerra.
+Tentativa de implementação do problema do carteiro chinês só que em star wars com planetas em guerra.
