@@ -18,6 +18,8 @@ void grafo_insere(plan * aInserir, int iNdice, int iTempo, int bEmGuerra);
 void grafo_libera(plan * grafo);
 void grafo_insere_duplo(plan ** grafo, int prim, int sec, int iTempo, int bEmGuerra);
 void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior);
+int dijkstra_proximo(plan ** grafo, int origem, int destino);
+int dijkstra_percorrer(plan ** grafo, int origem, int destino);
 
 int main(){
     srand(time(NULL));
@@ -81,6 +83,9 @@ int main(){
     for (i = 0; i < QPLANETAS; i += 1){
         printf("%d ",gfAnterior[i]);
     }
+    printf("\n");
+    printf("\n Dijkstra menor distancia entre pos 0 e 2: %d",dijkstra_pesototal(grafo,0,2));
+    printf("\n Dijkstra proximo vertice do menor caminho origem 0 e destino 2: %d",dijkstra_proximo(grafo,0,2));
     printf("\n");
 
     // --------------------------------------------------- //
@@ -209,7 +214,7 @@ void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior)
                             iCusto[gfMenorCaminho[i]] = iCusto[gfAtual] + aux->iTempo; // O novo menor eh esse
                             gfAnterior[gfMenorCaminho[i]] = gfAtual; // O anterior ao desse outro caminho eh o atual
                         }
-                    break;
+                    break; // so precisa percorrer ate achar, achou, sai
                     }
 
                 }
@@ -227,6 +232,29 @@ void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior)
 
 
     }
+}
+
+int dijkstra_pesototal(plan ** grafo, int origem, int destino){
+    int * iCusto = malloc(sizeof*iCusto * QPLANETAS);
+    int * gfAnterior = malloc(sizeof*gfAnterior * QPLANETAS);
+    grafo_dijkstra(grafo, origem, iCusto, gfAnterior);
+    int x = iCusto[destino];
+    free(iCusto);
+    free(gfAnterior);
+    return x;
+
+}
+
+int dijkstra_proximo(plan ** grafo, int origem, int destino){
+    int * iCusto = malloc(sizeof*iCusto * QPLANETAS);
+    int * gfAnterior = malloc(sizeof*gfAnterior * QPLANETAS);
+    grafo_dijkstra(grafo, origem, iCusto, gfAnterior);
+    int x = destino;
+    while (gfAnterior[x] != origem){
+        x = gfAnterior[x];
+    }
+    return x;
+
 }
 
 
