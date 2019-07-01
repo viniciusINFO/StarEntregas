@@ -7,19 +7,19 @@
 #define QPLANETAS 13
 
 typedef struct planeta{
-    int iNdice;
+    int gfIndice;
     int iTempo;
     int bEmGuerra;
     struct planeta * prox;
 }plan;
 
-plan * grafo_inicia(int iNdice);
-void grafo_insere(plan * aInserir, int iNdice, int iTempo, int bEmGuerra);
+plan * grafo_inicia(int gfIndice);
+void grafo_insere(plan * aInserir, int gfIndice, int iTempo, int bEmGuerra);
 void grafo_libera(plan * grafo);
 void grafo_insere_duplo(plan ** grafo, int prim, int sec, int iTempo, int bEmGuerra);
 void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior);
 int dijkstra_pesototal(plan ** grafo, int origem, int destino);
-int dijkstra_percorrer(plan ** grafo, int origem, int destino);
+int dijkstra_proximo(plan ** grafo, int origem, int destino);
 
 int main(){
     
@@ -63,7 +63,7 @@ int main(){
         plan * aux = grafo[i];
         printf("\n %d: ",i+1);
         while (aux->prox != NULL){
-            printf("%d (%d)  ",aux->prox->iNdice+1,aux->prox->iTempo);
+            printf("%d (%d)  ",aux->prox->gfIndice+1,aux->prox->iTempo);
             aux = aux->prox;
         }
     }
@@ -100,9 +100,9 @@ int main(){
     // ---------------------------------------------------------- //
 }
 
-plan * grafo_inicia(int iNdice){
-    plan * aIniciar = malloc(sizeof * aIniciar);
-    aIniciar->iNdice = iNdice;
+plan * grafo_inicia(int gfIndice){
+    plan * aIniciar = malloc(sizeof*aIniciar);
+    aIniciar->gfIndice = gfIndice;
     aIniciar->iTempo = 1; // Ir de um planeta para o mesmo significa esperar uma hora nele
     aIniciar->bEmGuerra = 0; // Deixar em zero por enquanto pra depois implementar isso
     aIniciar->prox = NULL;
@@ -110,16 +110,16 @@ plan * grafo_inicia(int iNdice){
 }
 
 
-void grafo_insere(plan * aInserir, int iNdice, int iTempo, int bEmGuerra){
+void grafo_insere(plan * aInserir, int gfIndice, int iTempo, int bEmGuerra){
     plan * aux = aInserir;
     while(aux->prox != NULL){
         aux = aux->prox;
     }
-    plan * novo = malloc(sizeof * novo);
+    plan * novo = malloc(sizeof*novo);
     aux->prox = novo;
     novo->iTempo = iTempo;
     novo->bEmGuerra = bEmGuerra;
-    novo->iNdice = iNdice;
+    novo->gfIndice = gfIndice;
     novo->prox = NULL;
 
 }
@@ -135,7 +135,7 @@ void grafo_insere_duplo(plan ** grafo, int prim, int sec, int iTempo, int bEmGue
     aux->prox = novo; 
     novo->iTempo = iTempo;
     novo->bEmGuerra = grafo[sec]->bEmGuerra;
-    novo->iNdice = sec; // Conexão do primário pro segundário
+    novo->gfIndice = sec; // Conexão do primário pro segundário
     novo->prox = NULL;
 
 
@@ -148,7 +148,7 @@ void grafo_insere_duplo(plan ** grafo, int prim, int sec, int iTempo, int bEmGue
     aux->prox = novoSec;
     novoSec->iTempo = iTempo;
     novoSec->bEmGuerra = grafo[prim]->bEmGuerra;
-    novoSec->iNdice = prim; // Conexão do secundario pro primário
+    novoSec->gfIndice = prim; // Conexão do secundario pro primário
     novoSec->prox = NULL;
 }
 
@@ -201,28 +201,28 @@ void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior)
         while (aux != NULL){ // Enquanto tiver vertices adjacentes
             bJaVisitou = 0;
             for (i = 0; i < gfVisitadosTam; i += 1){ // Procura nos vertices ja visitados pelo atual
-                if (aux->iNdice == gfVisitados[i]){
+                if (aux->gfIndice == gfVisitados[i]){
                     bJaVisitou = 1; // Se achar só passa pro próximo vertice
                 }
             }
             if (bJaVisitou != 1){
                 bEstaLista = 0;
                 for (i = 0; i < gfMenorCaminhoTam; i += 1){ // Se for um dos grafos que esta na lista
-                    if (aux->iNdice == gfMenorCaminho[i]){ // Se sim existe outro caminho e testamos qual o menor
+                    if (aux->gfIndice == gfMenorCaminho[i]){ // Se sim existe outro caminho e testamos qual o menor
                         bEstaLista = 1;
                         if (iCusto[gfAtual] + aux->iTempo < iCusto[gfMenorCaminho[i]]){ // Se sim o que acabamos de descobrir eh menor
                             iCusto[gfMenorCaminho[i]] = iCusto[gfAtual] + aux->iTempo; // O novo menor eh esse
                             gfAnterior[gfMenorCaminho[i]] = gfAtual; // O anterior ao desse outro caminho eh o atual
                         }
-                    break; // so precisa percorrer ate achar, achou, sai
+                        break; // so precisa percorrer ate achar, achou, sai
                     }
 
                 }
                 if (bEstaLista != 1){ // Se nao estiver na lista a gente coloca na lista(menorcaminho) e nas outras coisas
-                    gfMenorCaminho[gfMenorCaminhoTam] = aux->iNdice;
+                    gfMenorCaminho[gfMenorCaminhoTam] = aux->gfIndice;
                     gfMenorCaminhoTam += 1;
-                    iCusto[aux->iNdice] = aux->iTempo + iCusto[gfAtual]; // O custo do atual eh o custo do atual (o mais curto ate agr) e o caminho
-                    gfAnterior[aux->iNdice] = gfAtual;
+                    iCusto[aux->gfIndice] = aux->iTempo + iCusto[gfAtual]; // O custo do atual eh o custo do atual (o mais curto ate agr) e o caminho
+                    gfAnterior[aux->gfIndice] = gfAtual;
                 }
 
             }
@@ -232,6 +232,8 @@ void grafo_dijkstra(plan ** grafo, int gfInicio, int * iCusto, int * gfAnterior)
 
 
     }
+    free(gfVisitados);
+    free(gfMenorCaminho);
 }
 
 int dijkstra_pesototal(plan ** grafo, int origem, int destino){
